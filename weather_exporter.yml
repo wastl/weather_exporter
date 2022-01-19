@@ -1,0 +1,4 @@
+listen_server: http://192.168.178.55:41001/
+influx_server: 127.0.0.1
+influx_port: 8086
+influx_db: weather
