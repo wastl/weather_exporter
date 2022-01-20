@@ -5,6 +5,7 @@
 #include <thread>
 #include <cpprest/http_msg.h>
 #include <cpprest/http_listener.h>
+#include <glog/logging.h>
 
 #include "weather_listener.h"
 
@@ -30,7 +31,7 @@ void start_listener(const std::string& uri, const std::function<void(const weath
         auto uri = request.relative_uri();
         auto q = web::uri::split_query(uri.query());
 
-        std::cout << "Wetterdaten erhalten" << std::endl;
+        LOG(INFO) << "Wetterdaten erhalten";
 
         weather_data data;
         data.uv = std::stod(q["UV"]);
@@ -47,7 +48,11 @@ void start_listener(const std::string& uri, const std::function<void(const weath
         data.windgust = mph2ms(std::stod(q["windgustmph"]));
         data.windspeed = mph2ms(std::stod(q["windspeedmph"]));
 
-        handler(data);
+        try {
+            handler(data);
+        } catch(const std::exception &e) {
+            LOG(ERROR) << "Error while logging data: " << e.what();
+        }
     });
 
     listener.open().get();

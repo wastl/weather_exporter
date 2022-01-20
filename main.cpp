@@ -1,5 +1,8 @@
+#include <chrono>
+#include <thread>
 #include <iostream>
 #include <yaml-cpp/yaml.h>
+#include <glog/logging.h>
 
 #include "weather_listener.h"
 #include "weather_influx.h"
@@ -54,20 +57,24 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    google::InitGoogleLogging(argv[0]);
+
     config* cfg = load_config(argv[1]);
-    std::cout << "Listen Address: " << cfg->listen_server << std::endl;
-    std::cout << "Influx Server: " << cfg->influx_server << std::endl;
+    LOG(INFO) << "Listen Address: " << cfg->listen_server;
+    LOG(INFO) << "Influx Server: " << cfg->influx_server;
 
     auto handler = wastlnet::weather::build_influx_writer(cfg->influx_server, cfg->influx_port, cfg->influx_db);
 
     start_listener(cfg->listen_server, [=](const weather_data& data) {
-        std::cout << "Temperatur:       " << data.temp << "°C" << std::endl;
-        std::cout << "Luftfeuchtigkeit: " << data.humidity << "%" << std::endl;
-        std::cout << "Luftdruck:        " << data.barometer << "mm" << std::endl;
-        std::cout << std::endl;
+        LOG(INFO) << "Daten erhalten (Temperatur: " << data.temp << "°C, "
+                  << "Luftfeuchtigkeit: " << data.humidity << "%, "
+                  << "Luftdruck: " << data.barometer << "hPa)";
 
         handler(data);
     });
+
+
+    google::ShutdownGoogleLogging();
 
     return 0;
 }
