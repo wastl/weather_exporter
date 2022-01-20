@@ -1,0 +1,14 @@
+[Unit]
+Description=Weather Exporter
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+Environment="GLOG_log_dir=/var/log/weather"
+ExecStart=/usr/bin/env /usr/local/bin/weather_exporter /usr/local/etc/weather_exporter.yml
+
+[Install]
+WantedBy=multi-user.target
