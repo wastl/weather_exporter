@@ -33,22 +33,22 @@ void start_listener(const std::string& uri, const std::function<void(const weath
 
         LOG(INFO) << "Wetterdaten erhalten";
 
-        weather_data data;
-        data.uv = std::stod(q["UV"]);
-        data.barometer = inch2mm(std::stod(q["baromin"])) * 1.33322;
-        data.dailyrain = inch2mm(std::stod(q["dailyrainin"]));
-        data.dewpoint = fahrenheit2celsius(std::stod(q["dewptf"]));
-        data.humidity = std::stod(q["humidity"]);
-        data.indoorhumidity = std::stod(q["indoorhumidity"]);
-        data.indoortemp = fahrenheit2celsius(std::stod(q["indoortempf"]));
-        data.rain = inch2mm(std::stod(q["rainin"]));
-        data.solarradiation = std::stod(q["solarradiation"]);
-        data.temp = fahrenheit2celsius(std::stod(q["tempf"]));
-        data.winddir = std::stoi(q["winddir"]);
-        data.windgust = mph2ms(std::stod(q["windgustmph"]));
-        data.windspeed = mph2ms(std::stod(q["windspeedmph"]));
-
         try {
+            weather_data data;
+            data.uv = std::stod(q["UV"]);
+            data.barometer = inch2mm(std::stod(q["baromin"])) * 1.33322;
+            data.dailyrain = inch2mm(std::stod(q["dailyrainin"]));
+            data.dewpoint = fahrenheit2celsius(std::stod(q["dewptf"]));
+            data.humidity = std::stod(q["humidity"]);
+            data.indoorhumidity = std::stod(q["indoorhumidity"]);
+            data.indoortemp = fahrenheit2celsius(std::stod(q["indoortempf"]));
+            data.rain = inch2mm(std::stod(q["rainin"]));
+            data.solarradiation = std::stod(q["solarradiation"]);
+            data.temp = fahrenheit2celsius(std::stod(q["tempf"]));
+            data.winddir = std::stoi(q["winddir"]);
+            data.windgust = mph2ms(std::stod(q["windgustmph"]));
+            data.windspeed = mph2ms(std::stod(q["windspeedmph"]));
+
             handler(data);
         } catch(const std::exception &e) {
             LOG(ERROR) << "Error while logging data: " << e.what();
